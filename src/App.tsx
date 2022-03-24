@@ -5,6 +5,7 @@ import { auth } from './config/firebase/firebase'
 
 // pages
 import LoginPage from './pages/LoginPage'
+import ProfileViewPage from "./pages/ProfileViewPage";
 import ChatListPage from './pages/ChatListPage'
 import ChatFormPage from './pages/ChatFormPage'
 import ChatPage from "./pages/ChatPage";
@@ -40,6 +41,7 @@ const App = () => {
           <Route path={'/'} element={<ChatListPage />} />
           <Route path={'/chat/:uid'} element={<ChatPage user={user} />} />
           <Route path={'/form'} element={<ChatFormPage />} />
+          <Route path={'/profile'} element={<ProfileViewPage user={user} />} />
         </Routes>
       ) : (
         <Routes>

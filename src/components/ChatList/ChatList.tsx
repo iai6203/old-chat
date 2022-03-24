@@ -35,6 +35,7 @@ const ChatList = ({ activeIdx, chatRoomList, signOutLoading }: Props) => {
       <div className={'flex gap-2 justify-end'}>
         <Button>채팅 생성(C)</Button>
         <Button>채팅 접속(E)</Button>
+        <Button>프로필 수정(P)</Button>
         <Button>{signOutLoading ? '요청 중...' : '로그 아웃(L)'}</Button>
       </div>
     </div>

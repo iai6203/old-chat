@@ -21,4 +21,5 @@ export const db = getDatabase(app, 'https://chat-91a86-default-rtdb.asia-southea
 export const analytics = getAnalytics(app);
 
 // Database Ref
+export const profileRef = ref(db, 'profile')
 export const chatRoomRef = ref(db, 'chat_room')

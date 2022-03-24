@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { set, child } from 'firebase/database'
-import { db, chatRoomRef } from '../config/firebase/firebase'
+import { chatRoomRef } from '../config/firebase/firebase'
 import {v4 as uuid} from 'uuid'
 
 // layouts

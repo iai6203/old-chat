@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { User } from 'firebase/auth'
 import { get, push, child, onValue, onChildAdded, set } from 'firebase/database'
-import { chatRoomRef } from '../config/firebase/firebase'
-import { useParams } from 'react-router-dom'
+import { chatRoomRef, profileRef } from '../config/firebase/firebase'
+import { ChatRoom, Message, UserInfo } from '../ts/interfaces/db.interfaces'
 
 // layouts
 import DefaultLayout from '../layouts/DefaultLayout'
 
 // components
 import Chat from '../components/Chat/Chat'
-import { ChatRoom, Message } from '../ts/interfaces/db.interfaces'
 
 interface Props {
   user: User
@@ -25,7 +24,9 @@ const ChatPage = ({ user }: Props) => {
   const [info] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const [nicknameLoading, setNicknameLoading] = useState<boolean>(false)
   const [enterChatLoading, setEnterChatLoading] = useState<boolean>(false)
+  const [nickname, setNickname] = useState<string | null>(null)
   const [title, setTitle] = useState<string>('')
   const [users, setUsers] = useState<string[]>([])
   const [messages, setMessages] = useState<Set<Message>>(new Set())
@@ -41,7 +42,7 @@ const ChatPage = ({ user }: Props) => {
               child(chatRoomRef, `${uid}/users`),
               [..._users].concat(user.email)
             )
-            postSystemMessage(`${user.email}님이 입장하셨습니다.`)
+            postSystemMessage(`${nickname}님이 입장하셨습니다.`)
           }
         } else {
           set(child(chatRoomRef, `${uid}/users`), [user.email])
@@ -54,9 +55,9 @@ const ChatPage = ({ user }: Props) => {
 
   const postMessage = (msg: string) => {
     console.log('postMessage')
-    if (user.email) {
+    if (nickname) {
       const message: Message = {
-        email: user.email,
+        email: nickname,
         text: msg,
       }
 
@@ -87,7 +88,7 @@ const ChatPage = ({ user }: Props) => {
         [...users].filter((_email) => _email !== user.email)
       )
         .then(() => {
-          postSystemMessage(`${user.email}님이 퇴장하셨습니다.`)
+          postSystemMessage(`${nickname}님이 퇴장하셨습니다.`)
           navigate('../')
         })
         .catch(() => {
@@ -108,6 +109,21 @@ const ChatPage = ({ user }: Props) => {
       setError('채팅 정보를 불러오는 데 실패했습니다.')
       return
     }
+
+    // 닉네임 설정
+    setNicknameLoading(true)
+    get(child(profileRef, user.uid))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const _uesrInfo = snapshot.val() as UserInfo
+          setNickname(_uesrInfo.nickname)
+        } else {
+          setNickname(user.email)
+        }
+      })
+      .finally(() => {
+        setNicknameLoading(false)
+      })
 
     // 채팅 접속
     enterChat()
@@ -149,7 +165,7 @@ const ChatPage = ({ user }: Props) => {
       info={info}
       error={error}
     >
-      {enterChatLoading ? (
+      {enterChatLoading || nicknameLoading ? (
         <div className={'w-full h-full flex justify-center items-center'}>
           <span className={'text-lg font-bold text-white'}>
             채팅방에 입장하는 중...

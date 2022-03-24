@@ -58,6 +58,11 @@ const ChatListPage = () => {
 
       navigate(`/chat/${selectedChatRoom.uid}`)
     }
+    // 프로필 수정
+    if (userInput === 'P') {
+      navigate('/profile')
+    }
+    // 로그 아웃
     if (userInput === 'L') {
       setUserInput('')
       handleSignOut()

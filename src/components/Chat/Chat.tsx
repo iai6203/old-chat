@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import { Message } from '../../ts/interfaces/db.interfaces'
 
 // components
@@ -11,6 +11,15 @@ interface Props {
 }
 
 const Chat = ({ chatRoomTitle, users, messages }: Props) => {
+  const scrollContainerRef = useRef<HTMLUListElement>(null)
+  const dummyRef = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo(0, scrollContainerRef.current.scrollHeight)
+    }
+  }, [messages])
+
   return (
     <div className={'px-6 py-4 h-full flex flex-col'}>
       <h6 className={'text-2xl text-white font-bold'}>
@@ -30,12 +39,13 @@ const Chat = ({ chatRoomTitle, users, messages }: Props) => {
       </div>
 
       {/* 대화 */}
-      <ul className={'mt-4 p-2 flex-1 border-2 border-white flex-1 overflow-y-auto'}>
+      <ul ref={scrollContainerRef} className={'mt-4 p-2 flex-1 border-2 border-white flex-1 overflow-y-auto'}>
         {messages.map((message, idx) => (
           <li key={idx} className={'text-white leading-10'}>
             {message.email} : {message.text}
           </li>
         ))}
+        <li ref={dummyRef} />
       </ul>
 
       {/* 유틸 */}

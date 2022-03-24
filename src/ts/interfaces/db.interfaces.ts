@@ -1,3 +1,7 @@
+export interface UserInfo {
+  nickname: string
+}
+
 export interface ChatRoom {
   uid: string
   title: string
