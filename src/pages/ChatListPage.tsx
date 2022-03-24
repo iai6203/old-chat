@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
+import { signOut, User } from 'firebase/auth'
 import { onValue } from 'firebase/database'
 import { auth, chatRoomRef } from '../config/firebase/firebase'
 import { ChatRoom } from '../ts/interfaces/db.interfaces'
@@ -11,11 +11,15 @@ import DefaultLayout from '../layouts/DefaultLayout'
 // components
 import ChatList from '../components/ChatList/ChatList'
 
+interface Props {
+  user: User
+}
+
 export interface CustomChatRoom extends ChatRoom {
   active: boolean
 }
 
-const ChatListPage = () => {
+const ChatListPage = ({ user }: Props) => {
   const navigate = useNavigate()
 
   const [userInput, setUserInput] = useState<string>('')
@@ -80,11 +84,20 @@ const ChatListPage = () => {
     const unsubscribe = onValue(chatRoomRef, (snapshot) => {
       if (snapshot.exists()) {
         const _chatRoomList: CustomChatRoom[] = []
+
         snapshot.forEach((childSnapshot) => {
           const _chatRoom = childSnapshot.val() as CustomChatRoom
+          if (_chatRoom.users) {
+            const _users = [..._chatRoom.users] as string[]
+            if (user.email && _users.includes(user.email)) {
+              navigate(`/chat/${_chatRoom.uid}`)
+            }
+          }
+
           _chatRoom.active = false
           _chatRoomList.push(_chatRoom)
         })
+
         setChatRoomList(_chatRoomList)
       } else {
         setChatRoomList([])

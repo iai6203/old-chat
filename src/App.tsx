@@ -38,7 +38,7 @@ const App = () => {
     <Router>
       {user ? (
         <Routes>
-          <Route path={'/'} element={<ChatListPage />} />
+          <Route path={'/'} element={<ChatListPage user={user} />} />
           <Route path={'/chat/:uid'} element={<ChatPage user={user} />} />
           <Route path={'/form'} element={<ChatFormPage />} />
           <Route path={'/profile'} element={<ProfileViewPage user={user} />} />

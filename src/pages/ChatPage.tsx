@@ -130,7 +130,7 @@ const ChatPage = ({ user }: Props) => {
         setTitle(chatRoom.title)
         setUsers(chatRoom.users ? chatRoom.users : [])
       } else {
-        setError('채팅방 정보를 불러올 수 없습니다.')
+        navigate('../')
       }
     })
     const messagesUnsubscribe = onChildAdded(
