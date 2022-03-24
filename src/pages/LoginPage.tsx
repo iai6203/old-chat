@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
+import { GoogleAuthProvider, GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 import {auth, githubProvider, googleProvider} from '../config/firebase/firebase'
 import DefaultLayout from '../layouts/DefaultLayout'
 import Login from '../components/Login/Login'
@@ -38,6 +38,17 @@ const LoginPage = () => {
     if (userInput === 'G') {
       signInWithPopup(auth, googleProvider)
         .catch(error => {
+          const errorCode = error.code
+          const errorMessage = error.message
+
+          const email = error.email
+          const credential = GoogleAuthProvider.credentialFromError(error)
+
+          console.log('errorCode : ', errorCode)
+          console.log('errorMessage : ', errorMessage)
+          console.log('email : ', email)
+          console.log('credential : ', credential)
+
           setError('Google 로그인에 실패했습니다.')
           setUserInput('')
         })
@@ -47,9 +58,6 @@ const LoginPage = () => {
     // 깃허브 로그인
     if (userInput === 'GH') {
       signInWithPopup(auth, githubProvider)
-        .then(result => {
-
-        })
         .catch(error => {
           const errorCode = error.code
           const errorMessage = error.message
@@ -107,7 +115,7 @@ const LoginPage = () => {
     if (userInput === 'Y') {
       setLoginLoading(true)
       signInWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
+        .catch(() => {
           // 로그인 실패
           setError('이메일 또는 비밀번호가 일치하지 않습니다.')
           reset()
