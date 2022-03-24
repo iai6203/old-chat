@@ -56,6 +56,12 @@ const ChatListPage = () => {
         return
       }
 
+      if (selectedChatRoom.users && selectedChatRoom.users.length >= 5) {
+        setInfo('해당 채팅방은 인원이 최대입니다.')
+        setUserInput('')
+        return
+      }
+
       navigate(`/chat/${selectedChatRoom.uid}`)
     }
     // 프로필 수정

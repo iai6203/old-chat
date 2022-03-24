@@ -54,7 +54,6 @@ const ChatPage = ({ user }: Props) => {
   }
 
   const postMessage = (msg: string) => {
-    console.log('postMessage')
     if (nickname) {
       const message: Message = {
         email: nickname,
@@ -66,7 +65,6 @@ const ChatPage = ({ user }: Props) => {
   }
 
   const postSystemMessage = (msg: string) => {
-    console.log('postMessage')
     if (user.email) {
       const message: Message = {
         email: 'SYSTEM',
@@ -125,9 +123,6 @@ const ChatPage = ({ user }: Props) => {
         setNicknameLoading(false)
       })
 
-    // 채팅 접속
-    enterChat()
-
     const unsubscribe = onValue(child(chatRoomRef, uid), (snapshot) => {
       if (snapshot.exists()) {
         const chatRoom = snapshot.val() as ChatRoom
@@ -142,7 +137,6 @@ const ChatPage = ({ user }: Props) => {
       child(chatRoomRef, `${uid}/messages`),
       (snapshot) => {
         if (snapshot.exists()) {
-          console.log('message added!')
           const _message = snapshot.val() as Message
           setMessages((prev) => prev.add(_message))
         }
@@ -155,6 +149,12 @@ const ChatPage = ({ user }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (nickname) {
+      enterChat()
+    }
+  }, [nickname])
 
   return (
     <DefaultLayout

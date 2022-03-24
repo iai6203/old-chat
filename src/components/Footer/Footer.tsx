@@ -15,6 +15,8 @@ const Footer = ({ value, setValue, placeholder, handleSubmit }: Props) => {
         type="text"
         className={'w-full text-white bg-transparent outline-0'}
         placeholder={placeholder}
+        required
+        maxLength={255}
         value={value}
         onChange={e => setValue(e.target.value)}
         autoFocus

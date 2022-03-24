@@ -26,7 +26,7 @@ const ChatList = ({ activeIdx, chatRoomList, signOutLoading }: Props) => {
               <tr key={chatRoom.uid} className={`${idx === activeIdx && 'bg-white text-black'}`}>
                 <td className={'py-2'}>{chatRoom.title}</td>
                 <td className={'text-center'}>
-                  {chatRoom.users ? chatRoom.users.length : 0}/2
+                  {chatRoom.users ? chatRoom.users.length : 0}/5
                 </td>
               </tr>
             ))}
