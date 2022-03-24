@@ -35,7 +35,7 @@ const App = () => {
   }
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router>
       {user ? (
         <Routes>
           <Route path={'/'} element={<ChatListPage />} />
