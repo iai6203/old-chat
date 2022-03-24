@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup, getRedirectResult } from 'firebase/auth'
-import {auth, googleProvider} from '../config/firebase/firebase'
+import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
+import {auth, githubProvider, googleProvider} from '../config/firebase/firebase'
 import DefaultLayout from '../layouts/DefaultLayout'
 import Login from '../components/Login/Login'
 
@@ -46,21 +46,27 @@ const LoginPage = () => {
 
     // 깃허브 로그인
     if (userInput === 'GH') {
-      getRedirectResult(auth)
+      signInWithPopup(auth, githubProvider)
         .then(result => {
-          if (result) {
-            const credential = GithubAuthProvider.credentialFromResult(result)
-            if (credential) {
-              const token = credential.accessToken
-              console.log('token : ', token)
-            }
 
-            const user = result.user
-            console.log('user : ', user)
-          }
         })
-        .catch(() => {
-          setError('GitHub 로그인에 실패했습니다.')
+        .catch(error => {
+          const errorCode = error.code
+          const errorMessage = error.message
+
+          const email = error.email
+          const credential = GithubAuthProvider.credentialFromError(error)
+
+          console.log('errorCode : ', errorCode)
+          console.log('errorMessage : ', errorMessage)
+          console.log('email : ', email)
+          console.log('credential : ', credential)
+
+          if (errorCode === 'auth/account-exists-with-different-credential') {
+            setError('해당 이메일은 이미 인증된 계정이 존재합니다.\n다른 로그인 방법을 시도해보세요.')
+          } else {
+            setError('GitHub 로그인에 실패했습니다.')
+          }
           setUserInput('')
         })
       return
