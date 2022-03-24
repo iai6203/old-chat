@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import { signInWithEmailAndPassword} from 'firebase/auth'
-import { auth } from '../config/firebase/firebase'
+import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup, getRedirectResult } from 'firebase/auth'
+import {auth, googleProvider} from '../config/firebase/firebase'
 import DefaultLayout from '../layouts/DefaultLayout'
 import Login from '../components/Login/Login'
 
@@ -10,7 +10,7 @@ const regEmail =
 const LoginPage = () => {
   const [userInput, setUserInput] = useState<string>('')
   const [placeholder, setPlaceholder] = useState<string>('이메일을 입력')
-  const [info] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const [email, setEmail] = useState<string>('')
@@ -30,7 +30,41 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setInfo('')
+    setPlaceholder('')
     setError(null)
+
+    // 구글 로그인
+    if (userInput === 'G') {
+      signInWithPopup(auth, googleProvider)
+        .catch(error => {
+          setError('Google 로그인에 실패했습니다.')
+          setUserInput('')
+        })
+      return
+    }
+
+    // 깃허브 로그인
+    if (userInput === 'GH') {
+      getRedirectResult(auth)
+        .then(result => {
+          if (result) {
+            const credential = GithubAuthProvider.credentialFromResult(result)
+            if (credential) {
+              const token = credential.accessToken
+              console.log('token : ', token)
+            }
+
+            const user = result.user
+            console.log('user : ', user)
+          }
+        })
+        .catch(() => {
+          setError('GitHub 로그인에 실패했습니다.')
+          setUserInput('')
+        })
+      return
+    }
 
     // 이메일 입력
     if (!email) {
@@ -51,6 +85,7 @@ const LoginPage = () => {
     // 비밀번호 입력
     if (!password) {
       setPassword(userInput)
+      setInfo('Y. 로그인 / N. 재입력')
       setPlaceholder('Y. 로그인 / N. 재입력')
       setUserInput('')
       return

@@ -1,5 +1,8 @@
 import React from 'react'
 
+// components
+import BlockButton from "../Button/BlockButton";
+
 interface Props {
   email: string
   password: string
@@ -27,13 +30,15 @@ const Login = ({ email, password, loading }: Props) => {
               .map(() => '*')
               .join('')}
           </h6>
-          <button
-            className={
-              'mt-4 px-2 py-1 w-full bg-white text-black hover:cursor-default'
-            }
-          >
+          <BlockButton>
             {loading ? '요청 중...' : '로그인'}
-          </button>
+          </BlockButton>
+          <BlockButton>
+            Google 로그인 (G)
+          </BlockButton>
+          <BlockButton>
+            Github 로그인 (GH)
+          </BlockButton>
         </div>
       </div>
     </div>

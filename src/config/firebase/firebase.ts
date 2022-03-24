@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth'
 import { getDatabase, ref } from 'firebase/database'
 import { getAnalytics } from "firebase/analytics";
 
@@ -19,6 +19,10 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app)
 export const db = getDatabase(app, 'https://chat-91a86-default-rtdb.asia-southeast1.firebasedatabase.app/')
 export const analytics = getAnalytics(app);
+
+// Provider
+export const googleProvider = new GoogleAuthProvider()
+export const githubProvider = new GithubAuthProvider()
 
 // Database Ref
 export const profileRef = ref(db, 'profile')

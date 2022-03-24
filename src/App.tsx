@@ -5,10 +5,10 @@ import { auth } from './config/firebase/firebase'
 
 // pages
 import LoginPage from './pages/LoginPage'
-import ProfileViewPage from "./pages/ProfileViewPage";
+import ProfileViewPage from './pages/ProfileViewPage'
 import ChatListPage from './pages/ChatListPage'
 import ChatFormPage from './pages/ChatFormPage'
-import ChatPage from "./pages/ChatPage";
+import ChatPage from './pages/ChatPage'
 
 const App = () => {
   const [init, setInit] = useState<boolean>(false)
